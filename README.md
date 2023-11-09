@@ -1,4 +1,4 @@
-# LLM classifier
+# Multiclass Sentiment Classifier
 
 This model is a multiclass text classifier, which classifies a comment as a positive, negative, or neutral comment.
 
@@ -14,6 +14,7 @@ You need the following libraries to use the classifier:
 - NumPy
 
 How to install Tensorflow: <https://www.tensorflow.org/install>
+
 How to install NumPy: <https://numpy.org/install/>
 
 ## Train
