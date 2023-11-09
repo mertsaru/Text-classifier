@@ -9,8 +9,8 @@ import numpy as np
 
 # Parameters
 MODEL_PATH = "training/trained_model.keras"
-MAX_LEN = 200  # depends on the dataset, it is the lenght of the each sample
-VOCAB_SIZE = 20_000  # depends on the tokenizer
+MAX_LEN = 100  # depends on the dataset, it is the lenght of the each sample
+VOCAB_SIZE = 15_000  # depends on the tokenizer
 TOKENIZER_PATH = "sentiment analysis dataset/tokenizer.pkl"
 
 with open(TOKENIZER_PATH, "rb") as reader:
