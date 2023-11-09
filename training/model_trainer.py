@@ -1,36 +1,39 @@
 import numpy as np
 
 import tensorflow as tf
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D
-from tensorflow.keras.preprocessing import sequence
-from tensorflow.keras.datasets import imdb
+
 
 # Parameters
-model_name = "trained_model.h5"
-num_words = 10**3
+MODEL_NAME = "training/trained_model.keras"
+MAX_LEN = 100  # depends on the dataset, it is the lenght of the each sample
+VOCAB_SIZE = 15_000
+EPOCH = 10
 
-# Dataset
-(train_x, train_y), (test_x, test_y) = imdb.load_data(num_words = num_words)
-train_x = sequence.pad_sequences(train_x, maxlen=100, value = num_words - 1, padding="post")
-test_x = sequence.pad_sequences(test_x, maxlen=100, value = num_words - 1, padding="post")
-print(train_x,"\n ",train_y)
-print(type(test_x))
-exit(1)
-# Create model
-model = Sequential([
-    Embedding(10**3, 16),
-    GlobalAveragePooling1D(),
-    Dense(16, activation='relu'),
-    Dense(3, activation='sigmoid')
-])
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-print("")
+# Load datasets
+train_x = np.load("sentiment analysis dataset/cleaned_ds/train_features.npy")
+train_y = np.load("sentiment analysis dataset/cleaned_ds/train_labels.npy")
+test_x = np.load("sentiment analysis dataset/cleaned_ds/test_features.npy")
+test_y = np.load("sentiment analysis dataset/cleaned_ds/test_labels.npy")
+
+# Create and save the model
+model = Sequential(
+    [
+        Embedding(input_dim=VOCAB_SIZE, output_dim=64, input_length=MAX_LEN),
+        GlobalAveragePooling1D(),
+        Dense(64, activation="relu"),
+        Dense(3, activation="softmax"),
+    ]
+)
+model.compile(
+    loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"]
+)
 # Train model
-model.fit(train_x, train_y, epochs=5, batch_size=16, validation_split=0.2)
+model.fit(train_x, train_y, epochs=EPOCH, batch_size=16, validation_split=0.2)
 
 # Accuracy
 acc = model.evaluate(test_x, test_y)[1]
 print(f"Accuracy: {acc*100:.2f}")
 
-model.save(model_name)
+model.save(MODEL_NAME)
